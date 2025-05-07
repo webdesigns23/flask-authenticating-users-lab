@@ -4,7 +4,7 @@ from flask import Flask, make_response, jsonify, request, session
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
-from models import db, Article, User
+from models import db, Article, User, ArticlesSchema, UserSchema
 
 app = Flask(__name__)
 app.secret_key = b'Y\xf1Xz\x00\xad|eQ\x80t \xca\x1a\x10K'
@@ -30,7 +30,7 @@ class ClearSession(Resource):
 class IndexArticle(Resource):
     
     def get(self):
-        articles = [article.to_dict() for article in Article.query.all()]
+        articles = [ArticlesSchema().dump(article) for article in Article.query.all()]
         return articles, 200
 
 class ShowArticle(Resource):
@@ -42,7 +42,7 @@ class ShowArticle(Resource):
         if session['page_views'] <= 3:
 
             article = Article.query.filter(Article.id == id).first()
-            article_json = jsonify(article.to_dict())
+            article_json = ArticlesSchema.dump(article)
 
             return make_response(article_json, 200)
 
@@ -51,7 +51,6 @@ class ShowArticle(Resource):
 api.add_resource(ClearSession, '/clear')
 api.add_resource(IndexArticle, '/articles')
 api.add_resource(ShowArticle, '/articles/<int:id>')
-
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
