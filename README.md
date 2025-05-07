@@ -96,7 +96,7 @@ We'll need to build the following resources:
 - /delete, delete()
 - /check_session, get()
 
-#### Step 2: Intialize, Retrieve, and/or Update Session
+#### Step 2: Initialize, Retrieve, and/or Update Session
 
 - Session: /login post()
   - set session['user_id'] to the found user's id
